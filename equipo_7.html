@@ -1,717 +1,994 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Equipo 7 — Partícula Confinada</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Equipo 7 — Partícula Confinada</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
 
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-    :root {
-      --bg:        #0a0806;
-      --bg-soft:   #110d09;
-      --panel:     #15110c;
-      --panel-2:   #1c160f;
-      --line:      rgba(214, 158, 92, 0.18);
-      --amber:     #e8a24a;
-      --amber-hot: #ff7a18;
-      --ember:     #ffb347;
-      --cyan:      #5fd0d6;
-      --text:      #ede4d6;
-      --text-dim:  #a89b89;
-      --text-faint:#6f6557;
-      --serif: 'Cormorant Garamond', Georgia, serif;
-      --mono:  'JetBrains Mono', monospace;
-      --sans:  'Inter', system-ui, sans-serif;
-    }
+      :root {
+        --bg: #0a0806;
+        --bg-soft: #110d09;
+        --panel: #15110c;
+        --panel-2: #1c160f;
+        --line: rgba(214, 158, 92, 0.18);
+        --amber: #e8a24a;
+        --amber-hot: #ff7a18;
+        --ember: #ffb347;
+        --cyan: #5fd0d6;
+        --text: #ede4d6;
+        --text-dim: #a89b89;
+        --text-faint: #6f6557;
+        --serif: "Cormorant Garamond", Georgia, serif;
+        --mono: "JetBrains Mono", monospace;
+        --sans: "Inter", system-ui, sans-serif;
+      }
 
-    html { scroll-behavior: smooth; }
+      html {
+        scroll-behavior: smooth;
+      }
 
-    body {
-      font-family: var(--sans);
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.75;
-      font-weight: 300;
-      overflow-x: hidden;
-    }
+      body {
+        font-family: var(--sans);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        font-weight: 300;
+        overflow-x: hidden;
+      }
 
-    /* film-grain overlay */
-    body::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 9999;
-      opacity: 0.04;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    }
+      /* film-grain overlay */
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 9999;
+        opacity: 0.04;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
 
-    ::selection { background: var(--amber-hot); color: #0a0806; }
+      ::selection {
+        background: var(--amber-hot);
+        color: #0a0806;
+      }
 
-    /* ════════════ HERO ════════════ */
-    .hero {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 6rem 1.5rem 4rem;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 50% 38%, rgba(255, 122, 24, 0.08), transparent 50%),
-        var(--bg);
-    }
+      /* ════════════ HERO ════════════ */
+      .hero {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 6rem 1.5rem 4rem;
+        overflow: hidden;
+        background:
+          radial-gradient(
+            circle at 50% 38%,
+            rgba(255, 122, 24, 0.08),
+            transparent 50%
+          ),
+          var(--bg);
+      }
 
-    #field {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-    }
+      #field {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
 
-    .hero-inner { position: relative; z-index: 2; max-width: 900px; }
+      .hero-inner {
+        position: relative;
+        z-index: 2;
+        max-width: 900px;
+      }
 
-    .eyebrow {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.45em;
-      text-transform: uppercase;
-      color: var(--amber);
-      margin-bottom: 1.6rem;
-      opacity: 0;
-      animation: fade 1s ease forwards 0.2s;
-    }
+      .eyebrow {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.45em;
+        text-transform: uppercase;
+        color: var(--amber);
+        margin-bottom: 1.6rem;
+        opacity: 0;
+        animation: fade 1s ease forwards 0.2s;
+      }
 
-    .hero h1 {
-      font-family: var(--serif);
-      font-weight: 600;
-      font-size: clamp(3rem, 11vw, 7.5rem);
-      line-height: 0.92;
-      letter-spacing: 0.01em;
-      color: #fff;
-      opacity: 0;
-      animation: fade 1.2s ease forwards 0.4s;
-    }
+      .hero h1 {
+        font-family: var(--serif);
+        font-weight: 600;
+        font-size: clamp(3rem, 11vw, 7.5rem);
+        line-height: 0.92;
+        letter-spacing: 0.01em;
+        color: #fff;
+        opacity: 0;
+        animation: fade 1.2s ease forwards 0.4s;
+      }
 
-    .hero h1 .glow {
-      background: linear-gradient(180deg, #fff 0%, var(--ember) 55%, var(--amber-hot) 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+      .hero h1 .glow {
+        background: linear-gradient(
+          180deg,
+          #fff 0%,
+          var(--ember) 55%,
+          var(--amber-hot) 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
 
-    .hero .lead {
-      font-family: var(--serif);
-      font-style: italic;
-      font-size: clamp(1.1rem, 2.6vw, 1.7rem);
-      color: var(--text-dim);
-      margin: 1.4rem auto 0;
-      max-width: 620px;
-      opacity: 0;
-      animation: fade 1.2s ease forwards 0.7s;
-    }
+      .hero .lead {
+        font-family: var(--serif);
+        font-style: italic;
+        font-size: clamp(1.1rem, 2.6vw, 1.7rem);
+        color: var(--text-dim);
+        margin: 1.4rem auto 0;
+        max-width: 620px;
+        opacity: 0;
+        animation: fade 1.2s ease forwards 0.7s;
+      }
 
-    .course-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      letter-spacing: 0.25em;
-      color: var(--text-faint);
-      margin-top: 2rem;
-      padding: 0.45rem 1rem;
-      border: 1px solid var(--line);
-      border-radius: 100px;
-      opacity: 0;
-      animation: fade 1.2s ease forwards 0.9s;
-    }
-    .course-tag::before {
-      content: "";
-      width: 7px; height: 7px; border-radius: 50%;
-      background: var(--amber-hot);
-    }
+      .course-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.25em;
+        color: var(--text-faint);
+        margin-top: 2rem;
+        padding: 0.45rem 1rem;
+        border: 1px solid var(--line);
+        border-radius: 100px;
+        opacity: 0;
+        animation: fade 1.2s ease forwards 0.9s;
+      }
+      .course-tag::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--amber-hot);
+      }
 
-    .members {
-      list-style: none;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0.5rem 0;
-      margin-top: 2.4rem;
-      opacity: 0;
-      animation: fade 1.2s ease forwards 1.1s;
-    }
-    .members li {
-      font-family: var(--mono);
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
-      color: var(--text-dim);
-      padding: 0 1.3rem;
-      position: relative;
-    }
-    .members li + li::before {
-      content: "";
-      position: absolute;
-      left: 0; top: 50%;
-      width: 4px; height: 4px;
-      border-radius: 50%;
-      background: var(--amber);
-      transform: translateY(-50%);
-    }
+      .members {
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem 0;
+        margin-top: 2.4rem;
+        opacity: 0;
+        animation: fade 1.2s ease forwards 1.1s;
+      }
+      .members li {
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        color: var(--text-dim);
+        padding: 0 1.3rem;
+        position: relative;
+      }
+      .members li + li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: var(--amber);
+        transform: translateY(-50%);
+      }
 
-    .scroll-hint {
-      position: absolute;
-      bottom: 1.8rem;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 2;
-      font-family: var(--mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.3em;
-      color: var(--text-faint);
-      text-transform: uppercase;
-      animation: float 2.4s ease-in-out infinite;
-    }
+      .scroll-hint {
+        position: absolute;
+        bottom: 1.8rem;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 2;
+        font-family: var(--mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.3em;
+        color: var(--text-faint);
+        text-transform: uppercase;
+        animation: float 2.4s ease-in-out infinite;
+      }
 
-    /* ════════════ LAYOUT ════════════ */
-    main {
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
-    }
+      /* ════════════ LAYOUT ════════════ */
+      main {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+      }
 
-    section.block { padding: 5.5rem 0; border-top: 1px solid var(--line); }
-    section.block:first-of-type { border-top: none; }
+      section.block {
+        padding: 5.5rem 0;
+        border-top: 1px solid var(--line);
+      }
+      section.block:first-of-type {
+        border-top: none;
+      }
 
-    .sec-head {
-      display: flex;
-      align-items: baseline;
-      gap: 1.1rem;
-      margin-bottom: 3rem;
-    }
-    .sec-num {
-      font-family: var(--mono);
-      font-size: 0.78rem;
-      color: var(--amber-hot);
-      letter-spacing: 0.1em;
-      padding-top: 0.4rem;
-    }
-    .sec-head h2 {
-      font-family: var(--serif);
-      font-weight: 600;
-      font-size: clamp(1.9rem, 4.5vw, 3rem);
-      color: #fff;
-      line-height: 1.05;
-    }
-    .sec-head .sub {
-      display: block;
-      font-family: var(--mono);
-      font-size: 0.66rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--text-faint);
-      margin-top: 0.5rem;
-    }
+      .sec-head {
+        display: flex;
+        align-items: baseline;
+        gap: 1.1rem;
+        margin-bottom: 3rem;
+      }
+      .sec-num {
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        color: var(--amber-hot);
+        letter-spacing: 0.1em;
+        padding-top: 0.4rem;
+      }
+      .sec-head h2 {
+        font-family: var(--serif);
+        font-weight: 600;
+        font-size: clamp(1.9rem, 4.5vw, 3rem);
+        color: #fff;
+        line-height: 1.05;
+      }
+      .sec-head .sub {
+        display: block;
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--text-faint);
+        margin-top: 0.5rem;
+      }
 
-    /* ════════════ MEDIA / VIDEO ════════════ */
-    .media-frame {
-      position: relative;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      overflow: hidden;
-      background: #000;
-      box-shadow: 0 30px 80px rgba(0,0,0,0.6);
-    }
-    .media-frame::before {
-      content: "REC ●  CONFINAMIENTO_FASE_3";
-      position: absolute;
-      top: 0.9rem; left: 1rem;
-      z-index: 3;
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.18em;
-      color: rgba(255,122,24,0.85);
-      pointer-events: none;
-    }
-    .media-frame video { width: 100%; display: block; }
+      /* ════════════ MEDIA / VIDEO ════════════ */
+      .media-frame {
+        position: relative;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+        background: #000;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+      }
+      .media-frame::before {
+        content: "REC ●  CONFINAMIENTO_FASE_3";
+        position: absolute;
+        top: 0.9rem;
+        left: 1rem;
+        z-index: 3;
+        font-family: var(--mono);
+        font-size: 0.6rem;
+        letter-spacing: 0.18em;
+        color: rgba(255, 122, 24, 0.85);
+        pointer-events: none;
+      }
+      .media-frame video {
+        width: 100%;
+        display: block;
+      }
 
-    /* ════════════ PERFILES ════════════ */
-    .profiles-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-      gap: 1.5rem;
-    }
-    .profile-card {
-      position: relative;
-      background: linear-gradient(160deg, var(--panel) 0%, var(--bg-soft) 100%);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 2rem 1.5rem;
-      text-align: center;
-      transition: transform 0.4s cubic-bezier(.2,.8,.2,1), border-color 0.4s, box-shadow 0.4s;
-      overflow: hidden;
-    }
-    .profile-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 50% 0%, rgba(255,122,24,0.06), transparent 60%);
-      opacity: 0;
-      transition: opacity 0.4s;
-    }
-    .profile-card:hover {
-      transform: translateY(-6px);
-      border-color: rgba(214, 158, 92, 0.35);
-      box-shadow: 0 22px 50px rgba(0,0,0,0.5);
-    }
-    .profile-card:hover::before { opacity: 1; }
+      /* ════════════ PERFILES ════════════ */
+      .profiles-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+        gap: 1.5rem;
+      }
+      .profile-card {
+        position: relative;
+        background: linear-gradient(
+          160deg,
+          var(--panel) 0%,
+          var(--bg-soft) 100%
+        );
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 2rem 1.5rem;
+        text-align: center;
+        transition:
+          transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+          border-color 0.4s,
+          box-shadow 0.4s;
+        overflow: hidden;
+      }
+      .profile-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          circle at 50% 0%,
+          rgba(255, 122, 24, 0.06),
+          transparent 60%
+        );
+        opacity: 0;
+        transition: opacity 0.4s;
+      }
+      .profile-card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(214, 158, 92, 0.35);
+        box-shadow: 0 22px 50px rgba(0, 0, 0, 0.5);
+      }
+      .profile-card:hover::before {
+        opacity: 1;
+      }
 
-    .profile-photo, .profile-initials {
-      width: 96px; height: 96px;
-      border-radius: 50%;
-      object-fit: cover;
-      object-position: center top;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 1.1rem;
-      position: relative; z-index: 1;
-      border: 1px solid rgba(214, 158, 92, 0.3);
-    }
-    .profile-initials {
-      background: radial-gradient(circle at 30% 25%, #2a2118, #110d09);
-      font-family: var(--serif);
-      font-size: 2rem;
-      color: var(--ember);
-      letter-spacing: 0.04em;
-    }
-    .profile-card h3 {
-      position: relative; z-index: 1;
-      font-family: var(--serif);
-      font-weight: 600;
-      font-size: 1.35rem;
-      color: #fff;
-      margin-bottom: 0.3rem;
-    }
-    .profile-card .career {
-      position: relative; z-index: 1;
-      font-family: var(--mono);
-      font-size: 0.66rem;
-      letter-spacing: 0.25em;
-      color: var(--amber-hot);
-      margin-bottom: 1rem;
-    }
-    .profile-card p:not(.career) {
-      position: relative; z-index: 1;
-      font-size: 0.82rem;
-      color: var(--text-dim);
-      line-height: 1.65;
-    }
+      .profile-photo,
+      .profile-initials {
+        width: 96px;
+        height: 96px;
+        border-radius: 50%;
+        object-fit: cover;
+        object-position: center top;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.1rem;
+        position: relative;
+        z-index: 1;
+        border: 1px solid rgba(214, 158, 92, 0.3);
+      }
+      .profile-photo.aldo-photo {
+        object-position: center 28%;
+      }
+      .profile-initials {
+        background: radial-gradient(circle at 30% 25%, #2a2118, #110d09);
+        font-family: var(--serif);
+        font-size: 2rem;
+        color: var(--ember);
+        letter-spacing: 0.04em;
+      }
+      .profile-card h3 {
+        position: relative;
+        z-index: 1;
+        font-family: var(--serif);
+        font-weight: 600;
+        font-size: 1.35rem;
+        color: #fff;
+        margin-bottom: 0.3rem;
+      }
+      .profile-card .career {
+        position: relative;
+        z-index: 1;
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        letter-spacing: 0.25em;
+        color: var(--amber-hot);
+        margin-bottom: 1rem;
+      }
+      .profile-card p:not(.career) {
+        position: relative;
+        z-index: 1;
+        font-size: 0.82rem;
+        color: var(--text-dim);
+        line-height: 1.65;
+      }
 
-    /* ════════════ PROCESO (timeline) ════════════ */
-    .timeline { position: relative; padding-left: 2.2rem; }
-    .timeline::before {
-      content: "";
-      position: absolute;
-      left: 6px; top: 6px; bottom: 6px;
-      width: 1px;
-      background: linear-gradient(180deg, var(--amber-hot), rgba(255,122,24,0.1));
-    }
-    .step {
-      position: relative;
-      margin-bottom: 1.6rem;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 1.3rem 1.6rem;
-      transition: border-color 0.3s, transform 0.3s;
-    }
-    .step:hover { border-color: rgba(214, 158, 92, 0.3); transform: translateX(4px); }
-    .step::before {
-      content: "";
-      position: absolute;
-      left: -2.2rem; top: 1.6rem;
-      width: 13px; height: 13px;
-      border-radius: 50%;
-      background: var(--bg);
-      border: 2px solid var(--amber-hot);
-    }
-    .step .step-label {
-      font-family: var(--mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--amber);
-      display: block;
-      margin-bottom: 0.4rem;
-    }
-    .step p { color: var(--text-dim); font-size: 0.92rem; }
+      /* ════════════ PROCESO (timeline) ════════════ */
+      .timeline {
+        position: relative;
+        padding-left: 2.2rem;
+      }
+      .timeline::before {
+        content: "";
+        position: absolute;
+        left: 6px;
+        top: 6px;
+        bottom: 6px;
+        width: 1px;
+        background: linear-gradient(
+          180deg,
+          var(--amber-hot),
+          rgba(255, 122, 24, 0.1)
+        );
+      }
+      .step {
+        position: relative;
+        margin-bottom: 1.6rem;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 1.3rem 1.6rem;
+        transition:
+          border-color 0.3s,
+          transform 0.3s;
+      }
+      .step:hover {
+        border-color: rgba(214, 158, 92, 0.3);
+        transform: translateX(4px);
+      }
+      .step::before {
+        content: "";
+        position: absolute;
+        left: -2.2rem;
+        top: 1.6rem;
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        background: var(--bg);
+        border: 2px solid var(--amber-hot);
+      }
+      .step .step-label {
+        font-family: var(--mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--amber);
+        display: block;
+        margin-bottom: 0.4rem;
+      }
+      .step p {
+        color: var(--text-dim);
+        font-size: 0.92rem;
+      }
 
-    /* ════════════ METACOGNICIÓN ════════════ */
-    .meta-entries { display: grid; gap: 1.4rem; }
-    .meta-entry {
-      background: linear-gradient(160deg, var(--panel-2), var(--bg-soft));
-      border: 1px solid var(--line);
-      border-left: 2px solid var(--amber-hot);
-      border-radius: 0 12px 12px 0;
-      padding: 1.6rem 1.9rem;
-      position: relative;
-    }
-    .meta-entry::before {
-      content: "\201C";
-      position: absolute;
-      top: -0.4rem; right: 1.2rem;
-      font-family: var(--serif);
-      font-size: 4rem;
-      color: rgba(255,122,24,0.14);
-      line-height: 1;
-    }
-    .meta-entry h3 {
-      font-family: var(--serif);
-      font-weight: 600;
-      font-size: 1.3rem;
-      color: var(--ember);
-      margin-bottom: 0.6rem;
-    }
-    .meta-entry p {
-      font-family: var(--serif);
-      font-size: 1.12rem;
-      font-style: italic;
-      color: var(--text-dim);
-      line-height: 1.7;
-    }
+      /* ════════════ METACOGNICIÓN ════════════ */
+      .meta-entries {
+        display: grid;
+        gap: 1.4rem;
+      }
+      .meta-entry {
+        background: linear-gradient(160deg, var(--panel-2), var(--bg-soft));
+        border: 1px solid var(--line);
+        border-left: 2px solid var(--amber-hot);
+        border-radius: 0 12px 12px 0;
+        padding: 1.6rem 1.9rem;
+        position: relative;
+      }
+      .meta-entry::before {
+        content: "\201C";
+        position: absolute;
+        top: -0.4rem;
+        right: 1.2rem;
+        font-family: var(--serif);
+        font-size: 4rem;
+        color: rgba(255, 122, 24, 0.14);
+        line-height: 1;
+      }
+      .meta-entry h3 {
+        font-family: var(--serif);
+        font-weight: 600;
+        font-size: 1.3rem;
+        color: var(--ember);
+        margin-bottom: 0.6rem;
+      }
+      .meta-entry p {
+        font-family: var(--serif);
+        font-size: 1.12rem;
+        font-style: italic;
+        color: var(--text-dim);
+        line-height: 1.7;
+      }
 
-    /* ════════════ MODELO 3D ════════════ */
-    .model-wrapper {
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 30px 80px rgba(0,0,0,0.6);
-      background: #000;
-    }
-    .model-wrapper iframe {
-      width: 100%;
-      height: 600px;
-      border: none;
-      display: block;
-    }
-    .model-caption {
-      font-family: var(--mono);
-      font-size: 0.66rem;
-      letter-spacing: 0.18em;
-      color: var(--text-faint);
-      text-align: center;
-      margin-top: 1rem;
-      text-transform: uppercase;
-    }
+      /* ════════════ MODELO 3D ════════════ */
+      .model-wrapper {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+        background: #000;
+      }
+      .model-wrapper iframe {
+        width: 100%;
+        height: 600px;
+        border: none;
+        display: block;
+      }
+      .model-caption {
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        letter-spacing: 0.18em;
+        color: var(--text-faint);
+        text-align: center;
+        margin-top: 1rem;
+        text-transform: uppercase;
+      }
 
-    /* ════════════ FOOTER ════════════ */
-    footer {
-      border-top: 1px solid var(--line);
-      text-align: center;
-      padding: 3rem 1.5rem;
-      margin-top: 3rem;
-    }
-    footer .quote {
-      font-family: var(--serif);
-      font-style: italic;
-      font-size: 1.15rem;
-      color: var(--text-dim);
-      max-width: 560px;
-      margin: 0 auto 1.6rem;
-    }
-    footer .quote span { color: var(--ember); }
-    footer .meta {
-      font-family: var(--mono);
-      font-size: 0.68rem;
-      letter-spacing: 0.2em;
-      color: var(--text-faint);
-      text-transform: uppercase;
-    }
+      /* ════════════ FOOTER ════════════ */
+      footer {
+        border-top: 1px solid var(--line);
+        text-align: center;
+        padding: 3rem 1.5rem;
+        margin-top: 3rem;
+      }
+      footer .quote {
+        font-family: var(--serif);
+        font-style: italic;
+        font-size: 1.15rem;
+        color: var(--text-dim);
+        max-width: 560px;
+        margin: 0 auto 1.6rem;
+      }
+      footer .quote span {
+        color: var(--ember);
+      }
+      footer .meta {
+        font-family: var(--mono);
+        font-size: 0.68rem;
+        letter-spacing: 0.2em;
+        color: var(--text-faint);
+        text-transform: uppercase;
+      }
 
-    /* ════════════ ANIMATIONS / REVEAL ════════════ */
-    @keyframes fade { to { opacity: 1; transform: translateY(0); } }
-    @keyframes float { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+      /* ════════════ ANIMATIONS / REVEAL ════════════ */
+      @keyframes fade {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateX(-50%) translateY(0);
+        }
+        50% {
+          transform: translateX(-50%) translateY(8px);
+        }
+      }
 
-    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.9s ease, transform 0.9s cubic-bezier(.2,.8,.2,1); }
-    .reveal.in { opacity: 1; transform: none; }
+      .reveal {
+        opacity: 0;
+        transform: translateY(28px);
+        transition:
+          opacity 0.9s ease,
+          transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .reveal.in {
+        opacity: 1;
+        transform: none;
+      }
 
-    @media (max-width: 640px) {
-      .sec-head { flex-direction: column; gap: 0.4rem; }
-      .meta-entry, .step, .profile-card { padding-left: 1.2rem; padding-right: 1.2rem; }
-      .model-wrapper iframe { height: 420px; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation: none !important; transition: none !important; }
-      .reveal { opacity: 1; transform: none; }
-    }
-  </style>
-</head>
-<body>
-
-  <!-- ══════════════════════════════════════════
+      @media (max-width: 640px) {
+        .sec-head {
+          flex-direction: column;
+          gap: 0.4rem;
+        }
+        .meta-entry,
+        .step,
+        .profile-card {
+          padding-left: 1.2rem;
+          padding-right: 1.2rem;
+        }
+        .model-wrapper iframe {
+          height: 420px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation: none !important;
+          transition: none !important;
+        }
+        .reveal {
+          opacity: 1;
+          transform: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ══════════════════════════════════════════
        1. PRESENTACIÓN DEL EQUIPO
   ══════════════════════════════════════════ -->
-  <header class="hero">
-    <canvas id="field"></canvas>
+    <header class="hero">
+      <canvas id="field"></canvas>
 
-    <div class="hero-inner">
-      <p class="eyebrow">Electricidad &amp; Magnetismo · Reto Final</p>
-      <h1>Partícula <span class="glow">Confinada</span></h1>
-      <p class="lead">Domar el plasma como se domó el átomo: tres fases de confinamiento dentro de un reactor tokamak.</p>
+      <div class="hero-inner">
+        <p class="eyebrow">Electricidad &amp; Magnetismo · Reto Final</p>
+        <h1>Partícula <span class="glow">Confinada</span></h1>
+        <p class="lead">
+          Domar el plasma como se domó el átomo: tres fases de confinamiento
+          dentro de un reactor tokamak.
+        </p>
 
-      <span class="course-tag">TC1004 · EQUIPO 7</span>
+        <span class="course-tag">TC1004 · EQUIPO 7</span>
 
-      <ul class="members">
-        <li>Aldo Karim</li>
-        <li>Alejandro Montoya</li>
-        <li>Roberto Ochoa</li>
-        <li>Carlos Taboada</li>
-      </ul>
-    </div>
-
-    <div class="scroll-hint">scroll ↓</div>
-  </header>
-
-  <main>
-
-    <!-- VIDEO -->
-    <section class="block reveal">
-      <div class="sec-head">
-        <span class="sec-num">00 /</span>
-        <h2>La Simulación<span class="sub">Confinamiento en tres fases</span></h2>
+        <ul class="members">
+          <li>Aldo Karim</li>
+          <li>Alejandro Montoya</li>
+          <li>Roberto Ochoa</li>
+          <li>Carlos Taboada</li>
+        </ul>
       </div>
-      <div class="media-frame">
-        <video controls>
-          <source src="resources/Confinamiento_video.mp4" type="video/mp4" />
-          Tu navegador no soporta reproducción de video.
-        </video>
-      </div>
-    </section>
 
-    <!-- ══════════════════════════════════════════
+      <div class="scroll-hint">scroll ↓</div>
+    </header>
+
+    <main>
+      <!-- VIDEO -->
+      <section class="block reveal">
+        <div class="sec-head">
+          <span class="sec-num">00 /</span>
+          <h2>
+            La Simulación<span class="sub">Confinamiento en tres fases</span>
+          </h2>
+        </div>
+        <div class="media-frame">
+          <video controls>
+            <source src="resources/Confinamiento_video.mp4" type="video/mp4" />
+            Tu navegador no soporta reproducción de video.
+          </video>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════
          2. PERFILES PROFESIONALES
     ══════════════════════════════════════════ -->
-    <section id="perfiles" class="block reveal">
-      <div class="sec-head">
-        <span class="sec-num">01 /</span>
-        <h2>Perfiles Profesionales<span class="sub">Quiénes encendieron el reactor</span></h2>
-      </div>
-
-      <div class="profiles-grid">
-
-        <!-- Aldo Karim (sin foto disponible → iniciales) -->
-        <div class="profile-card">
-          <div class="profile-initials">AK</div>
-          <h3>Aldo Karim</h3>
-          <p class="career">ITC</p>
-          <p>[Semblanza de Aldo — máximo 80 palabras sobre su background e intereses en la ingeniería.]</p>
+      <section id="perfiles" class="block reveal">
+        <div class="sec-head">
+          <span class="sec-num">01 /</span>
+          <h2>
+            Perfiles Profesionales<span class="sub"
+              >Quiénes encendieron el reactor</span
+            >
+          </h2>
         </div>
 
-        <!-- Alejandro Montoya -->
-        <div class="profile-card">
-          <img class="profile-photo" src="resources/alejandro_montoya.jpg" alt="Alejandro Montoya" />
-          <h3>Alejandro Montoya</h3>
-          <p class="career">IRS</p>
-          <p>En la ingeniería, me interesa la creación de sistemas tecnológicos automatizados, como robots, drones y vehículos autónomos. Me interesa la programación y ML.</p>
+        <div class="profiles-grid">
+          <!-- Aldo Karim (sin foto disponible → iniciales) -->
+          <div class="profile-card">
+            <img
+              class="profile-photo aldo-photo"
+              src="resources/aldokarim.jpeg"
+              alt="Aldo Karim"
+            />
+            <h3>Aldo Karim</h3>
+            <p class="career">ITC</p>
+            <p>
+              En la ingeniería, me interesa el desarrollo de software con un
+              enfoque en la creacion de sistemas y soluciones, actualmente estoy
+              enfocado en el desarrollo web y la programación de backend, aunque
+              también me interesa el desarrollo movil.
+            </p>
+          </div>
+
+          <!-- Alejandro Montoya -->
+          <div class="profile-card">
+            <img
+              class="profile-photo"
+              src="resources/alejandro_montoya.jpg"
+              alt="Alejandro Montoya"
+            />
+            <h3>Alejandro Montoya</h3>
+            <p class="career">IRS</p>
+            <p>
+              En la ingeniería, me interesa la creación de sistemas tecnológicos
+              automatizados, como robots, drones y vehículos autónomos. Me
+              interesa la programación y ML.
+            </p>
+          </div>
+
+          <!-- Roberto Ochoa -->
+          <div class="profile-card">
+            <img
+              class="profile-photo"
+              src="resources/ROC.png"
+              alt="Roberto Ochoa"
+            />
+            <h3>Roberto Ochoa</h3>
+            <p class="career">ITC</p>
+            <p>
+              En la ingenieria, mi interes esta en el desarrollo del backend,
+              arquitectura de sistemas y en la computacion en la nube.
+            </p>
+          </div>
+
+          <!-- Carlos Taboada -->
+          <div class="profile-card">
+            <img
+              class="profile-photo"
+              src="resources/carlos_taboada.jpg"
+              alt="Carlos Taboada"
+            />
+            <h3>Carlos Taboada</h3>
+            <p class="career">ITC</p>
+            <p>
+              Me gusta la ciberseguridad. Mi interés se centra en la auditoría
+              de vulnerabilidades en infraestructuras de red y la implementación
+              de estrategias para defender la infraestructura digital contra
+              amenazas.
+            </p>
+          </div>
         </div>
+      </section>
 
-        <!-- Roberto Ochoa -->
-        <div class="profile-card">
-          <img class="profile-photo" src="resources/ROC.png" alt="Roberto Ochoa" />
-          <h3>Roberto Ochoa</h3>
-          <p class="career">ITC</p>
-          <p>En la ingenieria, mi interes esta en el desarrollo del backend, arquitectura de sistemas y en la computacion en la nube.</p>
-        </div>
-
-        <!-- Carlos Taboada -->
-        <div class="profile-card">
-          <img class="profile-photo" src="resources/carlos_taboada.jpg" alt="Carlos Taboada" />
-          <h3>Carlos Taboada</h3>
-          <p class="career">ITC</p>
-          <p>Me gusta la ciberseguridad. Mi interés se centra en la auditoría de vulnerabilidades en infraestructuras de red y la implementación de estrategias para defender la infraestructura digital contra amenazas.</p>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ══════════════════════════════════════════
+      <!-- ══════════════════════════════════════════
          3. PROCESO DE SOLUCIÓN DEL RETO
     ══════════════════════════════════════════ -->
-    <section id="proceso" class="block reveal">
-      <div class="sec-head">
-        <span class="sec-num">02 /</span>
-        <h2>Proceso de Solución<span class="sub">Del problema al plasma estable</span></h2>
-      </div>
+      <section id="proceso" class="block reveal">
+        <div class="sec-head">
+          <span class="sec-num">02 /</span>
+          <h2>
+            Proceso de Solución<span class="sub"
+              >Del problema al plasma estable</span
+            >
+          </h2>
+        </div>
 
-      <div class="timeline">
-        <div class="step">
-          <span class="step-label">Fase 01 — Planteamiento</span>
-          <p>[Paso 1 — Descripción del primer paso de ingeniería que siguió el equipo para entender y plantear el problema.]</p>
+        <div class="timeline">
+          <div class="step">
+            <span class="step-label">Fase 01 — Planteamiento</span>
+            <p>
+              Lo primero que hicimos fue entender a fondo el problema del
+              confinamiento de partículas en un reactor tokamak. Esto implicó
+              investigar cómo funcionan los campos magnéticos para mantener el
+              plasma estable, y qué leyes físicas están involucradas, como la
+              Ley de Biot-Savart y la Fuerza de Lorentz. Definimos claramente
+              los objetivos de cada fase y cómo se relacionan entre sí para
+              lograr una simulación completa y funcional.
+            </p>
+          </div>
+          <div class="step">
+            <span class="step-label">Fase 02 — Modelado</span>
+            <p>
+              En esta fase, nos enfocamos en traducir el problema físico a un
+              modelo matemático y luego a un modelo computacional. Esto
+              involucró definir las ecuaciones que describen el movimiento de las
+              partículas bajo la influencia de los campos magnéticos, y cómo
+              implementar estas ecuaciones en código. Tomamos decisiones sobre
+              qué simplificaciones eran aceptables para mantener la simulación
+              manejable sin perder la esencia del fenómeno físico.
+            </p>
+          </div>
+          <div class="step">
+            <span class="step-label">Fase 03 — Programación</span>
+            <p>
+              Aquí fue donde realmente dimos vida a nuestro modelo. Escribimos
+              el código para simular el movimiento de las partículas dentro del
+              campo magnético, asegurándonos de que las leyes físicas se
+              respetaran en cada paso de la simulación. Esta fase implicó mucha
+              prueba y error, ajustes finos y optimización para lograr una
+              simulación fluida y precisa.
+            </p>
+          </div>
+          <div class="step">
+            <span class="step-label">Fase 04 — Integración</span>
+            <p>
+              En esta etapa, integramos todas las partes de la simulación para
+              crear un modelo cohesivo y funcional. Esto implicó asegurarnos de
+              que el código para el movimiento de las partículas, los campos
+              magnéticos y cualquier otro componente trabajaran juntos sin
+              problemas. También nos enfocamos en la presentación visual de la
+              simulación, para que fuera no solo precisa sino también atractiva
+              y fácil de entender.
+            </p>
+          </div>
+          <div class="step">
+            <span class="step-label">Fase 05 — Validación</span>
+            <p>
+              Finalmente, validamos nuestra simulación comparando los resultados
+              con lo que se espera según las leyes físicas y, si es posible,
+              con datos reales de experimentos de tokamak. Ajustamos cualquier
+              discrepancia y nos aseguramos de que la simulación fuera lo más
+              precisa posible dentro de las limitaciones de nuestro modelo.
+            </p>
+          </div>
         </div>
-        <div class="step">
-          <span class="step-label">Fase 02 — Modelado</span>
-          <p>[Paso 2 — Descripción del diseño y modelado matemático de la partícula confinada y sus tres fases.]</p>
-        </div>
-        <div class="step">
-          <span class="step-label">Fase 03 — Programación</span>
-          <p>[Paso 3 — Descripción del proceso de programación: cómo se construyó el código y las decisiones técnicas tomadas.]</p>
-        </div>
-        <div class="step">
-          <span class="step-label">Fase 04 — Integración</span>
-          <p>[Paso 4 — Descripción de cómo se acoplaron las tres fases de confinamiento en una solución integrada.]</p>
-        </div>
-        <div class="step">
-          <span class="step-label">Fase 05 — Validación</span>
-          <p>[Paso 5 — Descripción de las pruebas, ajustes y validación del resultado final.]</p>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ══════════════════════════════════════════
+      <!-- ══════════════════════════════════════════
          4. METACOGNICIÓN INDIVIDUAL
             (Orden alfabético por primer apellido) K · M · O · T
     ══════════════════════════════════════════ -->
-    <section id="metacognicion" class="block reveal">
-      <div class="sec-head">
-        <span class="sec-num">03 /</span>
-        <h2>Metacognición Individual<span class="sub">Reflexiones del equipo</span></h2>
-      </div>
-
-      <div class="meta-entries">
-
-        <div class="meta-entry">
-          <h3>Aldo Karim</h3>
-          <p>[Reflexión de Aldo sobre su proceso de aprendizaje: qué habilidades desarrolló, qué le impactó más y cuál fue su parte favorita del reto.]</p>
+      <section id="metacognicion" class="block reveal">
+        <div class="sec-head">
+          <span class="sec-num">03 /</span>
+          <h2>
+            Metacognición Individual<span class="sub"
+              >Reflexiones del equipo</span
+            >
+          </h2>
         </div>
 
-        <div class="meta-entry">
-          <h3>Alejandro Montoya</h3>
-          <p>En este reto, desarrollé habilidades de simulación y comprensión del sistema físico de un tokamak. A través de las entregas, fui viendo cómo diferentes factores afectan su funcionamiento: la Ley de Biot-Savart para las cargas magnéticas, cómo la Fuerza de Lorentz afecta las partículas, entre otras cosas. Plasmar esto en una simulación me enseñó a construir simulaciones eficientes y funcionales.</p>
+        <div class="meta-entries">
+          <div class="meta-entry">
+            <h3>Aldo Karim</h3>
+            <p>
+              Este proyecto me permitió aplicar los conceptos de
+              electromagnetismo a un problema complejo y realista, lo cual fue
+              muy enriquecedor. Me gustó especialmente la fase de modelado,
+              donde tuvimos que traducir las leyes físicas a ecuaciones
+              matemáticas y luego a código. Fue un proceso desafiante pero
+              gratificante, definitivamente me ayudó a entender mejor cómo
+              funcionan los campos magnéticos y las fuerzas involucradas en el
+              confinamiento de partículas. Además, trabajar en equipo y
+              compartir ideas fue una experiencia muy positiva que enriqueció el
+              resultado final.
+            </p>
+          </div>
+
+          <div class="meta-entry">
+            <h3>Alejandro Montoya</h3>
+            <p>
+              En este reto, desarrollé habilidades de simulación y comprensión
+              del sistema físico de un tokamak. A través de las entregas, fui
+              viendo cómo diferentes factores afectan su funcionamiento: la Ley
+              de Biot-Savart para las cargas magnéticas, cómo la Fuerza de
+              Lorentz afecta las partículas, entre otras cosas. Plasmar esto en
+              una simulación me enseñó a construir simulaciones eficientes y
+              funcionales.
+            </p>
+          </div>
+
+          <div class="meta-entry">
+            <h3>Roberto Ochoa</h3>
+            <p>
+              Este proyecto resultó sumamente enriquecedor, ya que me permitió
+              integrar mis habilidades en desarrollo de software con los
+              principios físicos adquiridos en la materia de electromagnetismo.
+              Analizar una máquina tan compleja y fascinante como el reactor
+              tokamak fue una experiencia increíble. Comprender la función de
+              cada componente, la justificación detrás de las decisiones de
+              diseño y las leyes aplicadas me hizo sentir una verdadera conexión
+              con el nivel de análisis de los ingenieros que desarrollaron esta
+              tecnología.
+            </p>
+          </div>
+
+          <div class="meta-entry">
+            <h3>Carlos Taboada</h3>
+            <p>
+              Este reto fue una gran oportunidad para fortalecer mis habilidades
+              de programación y resolución de problemas. Lo que más me impactó
+              fue ver cómo los conceptos de la física se reflejaban en las
+              simulaciones con el código. Mi parte favorita fue reír y programar
+              con el equipo; cada quien decía su idea y ver cómo incorporar
+              todas nuestras ideas y superar los problemas fue una experiencia
+              muy positiva. Ver el modelo final funcionando correctamente fue la
+              mejor recompensa.
+            </p>
+          </div>
         </div>
+      </section>
 
-        <div class="meta-entry">
-          <h3>Roberto Ochoa</h3>
-          <p>Este proyecto resultó sumamente enriquecedor, ya que me permitió integrar mis habilidades en desarrollo de software con los principios físicos adquiridos en la materia de electromagnetismo. Analizar una máquina tan compleja y fascinante como el reactor tokamak fue una experiencia increíble. Comprender la función de cada componente, la justificación detrás de las decisiones de diseño y las leyes aplicadas me hizo sentir una verdadera conexión con el nivel de análisis de los ingenieros que desarrollaron esta tecnología.</p>
-        </div>
-
-        <div class="meta-entry">
-          <h3>Carlos Taboada</h3>
-          <p>Este reto fue una gran oportunidad para fortalecer mis habilidades de programación y resolución de problemas. Lo que más me impactó fue ver cómo los conceptos de la física se reflejaban en las simulaciones con el código. Mi parte favorita fue reír y programar con el equipo; cada quien decía su idea y ver cómo incorporar todas nuestras ideas y superar los problemas fue una experiencia muy positiva. Ver el modelo final funcionando correctamente fue la mejor recompensa.</p>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ══════════════════════════════════════════
+      <!-- ══════════════════════════════════════════
          5. MODELO 3D
     ══════════════════════════════════════════ -->
-    <section id="modelo3d" class="block reveal">
-      <div class="sec-head">
-        <span class="sec-num">04 /</span>
-        <h2>Modelo 3D<span class="sub">Reactor Tokamak — interactivo</span></h2>
-      </div>
-      <div class="model-wrapper">
-        <iframe
-          title="Partícula Confinada — Modelo 3D"
-          src="https://sketchfab.com/models/fb586f5f91ae4b11a8da100997fed1f6/embed"
-          allow="autoplay; fullscreen; xr-spatial-tracking"
-          allowfullscreen
-          mozallowfullscreen="true"
-          webkitallowfullscreen="true">
-        </iframe>
-      </div>
-      <p class="model-caption">Arrastra para orbitar · scroll para acercar</p>
-    </section>
+      <section id="modelo3d" class="block reveal">
+        <div class="sec-head">
+          <span class="sec-num">04 /</span>
+          <h2>
+            Modelo 3D<span class="sub">Reactor Tokamak — interactivo</span>
+          </h2>
+        </div>
+        <div class="model-wrapper">
+          <iframe
+            title="Partícula Confinada — Modelo 3D"
+            src="https://sketchfab.com/models/fb586f5f91ae4b11a8da100997fed1f6/embed"
+            allow="autoplay; fullscreen; xr-spatial-tracking"
+            allowfullscreen
+            mozallowfullscreen="true"
+            webkitallowfullscreen="true"
+          >
+          </iframe>
+        </div>
+        <p class="model-caption">Arrastra para orbitar · scroll para acercar</p>
+      </section>
+    </main>
 
-  </main>
+    <footer>
+      <p class="quote">
+        "Ahora me he convertido en la <span>energía</span>, contenida por campos
+        magnéticos."
+      </p>
+      <p class="meta">Equipo 7 · TC1004 · Tecnológico de Monterrey · 2026</p>
+    </footer>
 
-  <footer>
-    <p class="quote">"Ahora me he convertido en la <span>energía</span>, contenida por campos magnéticos."</p>
-    <p class="meta">Equipo 7 · TC1004 · Tecnológico de Monterrey · 2026</p>
-  </footer>
+    <script>
+      /* ── Fondo: campo de partículas orbitando (estética atómica) ── */
+      (function () {
+        const canvas = document.getElementById("field");
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        let w, h, particles, raf;
+        const reduce = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        ).matches;
 
-  <script>
-    /* ── Fondo: campo de partículas orbitando (estética atómica) ── */
-    (function () {
-      const canvas = document.getElementById('field');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      let w, h, particles, raf;
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        function resize() {
+          w = canvas.width = canvas.offsetWidth * devicePixelRatio;
+          h = canvas.height = canvas.offsetHeight * devicePixelRatio;
+        }
 
-      function resize() {
-        w = canvas.width = canvas.offsetWidth * devicePixelRatio;
-        h = canvas.height = canvas.offsetHeight * devicePixelRatio;
-      }
+        function init() {
+          resize();
+          const count = Math.min(90, Math.floor(w / 24));
+          particles = Array.from({ length: count }, () => ({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            vx: (Math.random() - 0.5) * 0.25 * devicePixelRatio,
+            vy: (Math.random() - 0.5) * 0.25 * devicePixelRatio,
+            r: (Math.random() * 1.6 + 0.4) * devicePixelRatio,
+            hot: Math.random() > 0.7,
+          }));
+        }
 
-      function init() {
-        resize();
-        const count = Math.min(90, Math.floor(w / 24));
-        particles = Array.from({ length: count }, () => ({
-          x: Math.random() * w,
-          y: Math.random() * h,
-          vx: (Math.random() - 0.5) * 0.25 * devicePixelRatio,
-          vy: (Math.random() - 0.5) * 0.25 * devicePixelRatio,
-          r: (Math.random() * 1.6 + 0.4) * devicePixelRatio,
-          hot: Math.random() > 0.7
-        }));
-      }
+        function draw() {
+          ctx.clearRect(0, 0, w, h);
+          for (let i = 0; i < particles.length; i++) {
+            const p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            if (p.x < 0 || p.x > w) p.vx *= -1;
+            if (p.y < 0 || p.y > h) p.vy *= -1;
 
-      function draw() {
-        ctx.clearRect(0, 0, w, h);
-        for (let i = 0; i < particles.length; i++) {
-          const p = particles[i];
-          p.x += p.vx; p.y += p.vy;
-          if (p.x < 0 || p.x > w) p.vx *= -1;
-          if (p.y < 0 || p.y > h) p.vy *= -1;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = p.hot
+              ? "rgba(214,158,92,0.55)"
+              : "rgba(168,155,137,0.35)";
+            ctx.fill();
 
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-          ctx.fillStyle = p.hot ? 'rgba(214,158,92,0.55)' : 'rgba(168,155,137,0.35)';
-          ctx.fill();
-
-          for (let j = i + 1; j < particles.length; j++) {
-            const q = particles[j];
-            const dx = p.x - q.x, dy = p.y - q.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            const max = 130 * devicePixelRatio;
-            if (dist < max) {
-              ctx.beginPath();
-              ctx.moveTo(p.x, p.y);
-              ctx.lineTo(q.x, q.y);
-              ctx.strokeStyle = 'rgba(214,158,92,' + (0.08 * (1 - dist / max)) + ')';
-              ctx.lineWidth = devicePixelRatio * 0.6;
-              ctx.stroke();
+            for (let j = i + 1; j < particles.length; j++) {
+              const q = particles[j];
+              const dx = p.x - q.x,
+                dy = p.y - q.y;
+              const dist = Math.sqrt(dx * dx + dy * dy);
+              const max = 130 * devicePixelRatio;
+              if (dist < max) {
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(q.x, q.y);
+                ctx.strokeStyle =
+                  "rgba(214,158,92," + 0.08 * (1 - dist / max) + ")";
+                ctx.lineWidth = devicePixelRatio * 0.6;
+                ctx.stroke();
+              }
             }
           }
+          raf = requestAnimationFrame(draw);
         }
-        raf = requestAnimationFrame(draw);
-      }
 
-      init();
-      if (!reduce) draw();
-      else { /* render una sola vez */ draw(); cancelAnimationFrame(raf); }
+        init();
+        if (!reduce) draw();
+        else {
+          /* render una sola vez */ draw();
+          cancelAnimationFrame(raf);
+        }
 
-      window.addEventListener('resize', () => { cancelAnimationFrame(raf); init(); if (!reduce) draw(); });
-    })();
+        window.addEventListener("resize", () => {
+          cancelAnimationFrame(raf);
+          init();
+          if (!reduce) draw();
+        });
+      })();
 
-    /* ── Reveal al hacer scroll ── */
-    (function () {
-      const els = document.querySelectorAll('.reveal');
-      if (!('IntersectionObserver' in window)) { els.forEach(e => e.classList.add('in')); return; }
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-      }, { threshold: 0.12 });
-      els.forEach(e => io.observe(e));
-    })();
-  </script>
-
-</body>
+      /* ── Reveal al hacer scroll ── */
+      (function () {
+        const els = document.querySelectorAll(".reveal");
+        if (!("IntersectionObserver" in window)) {
+          els.forEach((e) => e.classList.add("in"));
+          return;
+        }
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                e.target.classList.add("in");
+                io.unobserve(e.target);
+              }
+            });
+          },
+          { threshold: 0.12 },
+        );
+        els.forEach((e) => io.observe(e));
+      })();
+    </script>
+  </body>
 </html>
